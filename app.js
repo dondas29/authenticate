@@ -39,6 +39,7 @@ app.post("/register",function(req,res){
    })
    user.save().then(()=>
    res.redirect("/login"))
+   console.log("DurgaDon")
 
 })
 
