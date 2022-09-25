@@ -1,4 +1,5 @@
 //jshint esversion:6
+require("dotenv").config()
 const express=require("express")
 const bodyparser=require("body-parser")
 const mongoose=require("mongoose")
@@ -15,6 +16,8 @@ const userschema=mongoose.Schema({
     username:String,
     password:String
 })
+
+userschema.plugin(encrypt,{secret:process.env.SECRET,encryptedFields:["password"]})
 
 const usermodel=mongoose.model("user",userschema)
 
@@ -39,8 +42,6 @@ app.post("/register",function(req,res){
    })
    user.save().then(()=>
    res.redirect("/login"))
-   console.log("DurgaDon")
-
 })
 
 app.post("/login",function(req,res){
@@ -51,8 +52,14 @@ app.post("/login",function(req,res){
         console.log(err);
     }
     else{
-        if(founduser.password==password){
-            res.render("secrets")
+        if(founduser!=null){
+            if(founduser.password==password){
+             res.render("secrets")
+        }
+        }
+        else{
+           // alert("'please register")
+            res.redirect("/register")
         }
     }
    })
